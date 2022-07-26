@@ -1,0 +1,152 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Users Documentation",
+    "description": "This is an API To Manage Users",
+    "version": "1.0.0",
+    "contact": {
+      "email": "rafaell.gomes@gmail.com"
+    }
+  },
+  "paths": {
+    "/users": {
+      "post": {
+        "tags": ["User"],
+        "summary": "Create an User",
+        "description": "Create a new user",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["name", "email"],
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string"
+                  }
+                },
+                "example": {
+                  "name": "Rafael Gomes",
+                  "email": "rafael@email.com"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "Bad request"
+          }
+        }
+      },
+      "get": {
+        "tags": ["User"],
+        "summary": "List all users. Only admin can access",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "header",
+            "required": true,
+            "description": "ID from an admin user. Necessary to list all users",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "email": {
+                        "type": "string"
+                      },
+                      "admin": {
+                        "type": "boolean"
+                      },
+                      "created_at": {
+                        "type": "date"
+                      },
+                      "updated_at": {
+                        "type": "date"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "User doesn't have permission"
+          }
+        }
+      }
+      
+    },
+    "/users/{user_id}": {
+      "parameters": [
+        {
+          "name": "user_id",
+          "in": "path",
+          "required": true,
+          "description": "ID of an user",
+          "type": "string"
+        }
+      ],
+      "get": {
+        "summary": "User details",
+        "tags": ["User"],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "404": {
+            "description": "User not find"
+          }
+        }
+      }
+    },
+    "/users/{user_id}/admin": {
+      "parameters": [
+        {
+          "name": "user_id",
+          "in": "path",
+          "required": true,
+          "description": "ID of user that you want to turn admin",
+          "type": "string"
+        }
+      ],
+      "patch": {
+        "summary": "Turn user with give ID as admin",
+        "tags": ["User"],
+        "responses": {
+          "200": {
+            "description": "User is now admin"
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "404": {
+            "description": "User not find"
+          }
+        }
+      }
+    }
+  }
+}
